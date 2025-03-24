@@ -25,15 +25,26 @@ void data_task(void *p) {
 
 void process_task(void *p) {
     int data = 0;
+    static int buffer[5] = {0};
+    static int index = 0;
+    static int sum = 0;
 
     while (true) {
+        int avg = 0;
         if (xQueueReceive(xQueueData, &data, 100)) {
-            // implementar filtro aqui!
+            
+            sum -= buffer[index];
 
+            buffer[index] = data;
 
+            sum += data;
 
+            avg = sum / 5;
 
-            // deixar esse delay!
+            printf("%d\n", avg);
+
+            index = (index + 1) % 5;
+
             vTaskDelay(pdMS_TO_TICKS(50));
         }
     }
